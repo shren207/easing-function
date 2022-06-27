@@ -5,14 +5,11 @@ type Subscription = (x: number) => void;
 // 일단은 linear로 구현해보자.
 export class Tween {
   constructor(
-    from: number,
-    to: number,
-    easing: Easing = (t) => t,
+    from: number, // startValue of x
+    to: number, // endValue of x
+    easing: Easing = (t) => t, // easing function
     duration: number = 1000
   ) {}
-  // from === startValue of x
-  // to === endValue of x
-  // easing === easingFunction
 
   start(): void {}
   stop(): void {}

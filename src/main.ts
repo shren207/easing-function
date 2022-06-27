@@ -1,5 +1,5 @@
 import "./style.css";
-import { Tween } from "./Tween";
+// import { Tween } from "./Tween";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -11,89 +11,82 @@ app.innerHTML = `
     <br />
     <label for="to">to : </label>
     <input type="text" id="to" />
+    <br />
+    <label for="duration">duration : </label>
+    <input type="text" id="duration" />
 </form>
   <button class="start">Start</button>
   <button class="stop">Stop</button>
   <button class="reset">Reset</button>
   <div class="box">
     <div class="box-inner"></div>
-    <div class="coords"></div>
 </div>
 `;
 
 export default class App {
   static instance: App;
+
   delta: number = 0;
-  startTime: number;
-  inputFrom: HTMLInputElement;
-  inputTo: HTMLInputElement;
-  frameRequestHandle: number;
-  box: HTMLDivElement;
-  coords: HTMLDivElement;
-  start: HTMLButtonElement;
-  tween: Tween;
-  x: number = 50;
-  // tween: Tween;
+  startTime: number = 0;
+  frameRequestHandle: number = 0;
+  box: HTMLDivElement = document.querySelector<HTMLDivElement>(".box-inner")!;
+  start: HTMLButtonElement =
+    document.querySelector<HTMLButtonElement>(".start")!;
+  stop: HTMLButtonElement = document.querySelector<HTMLButtonElement>(".stop")!;
+  from: number = 0;
+  to: number = 0;
+  x: number = 0;
+  duration: number = 1000;
+
   constructor() {
     App.instance = this; // Singleton Pattern
-    this.startTime = Date.now();
-    this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
-    this.box = document.querySelector<HTMLDivElement>(".box")!;
-    this.coords = document.querySelector<HTMLDivElement>(".coords")!;
-    this.coords.textContent = "x === 50";
-    this.start = document.querySelector<HTMLButtonElement>(".start")!;
-    this.inputFrom = document.querySelector<HTMLInputElement>("#from")!;
-    this.inputTo = document.querySelector<HTMLInputElement>("#to")!;
+
+    this.box.textContent = `x === ${this.x}`;
     this.start.addEventListener("click", this.handleClick);
+    this.stop.addEventListener("click", this.handleStop);
   }
 
-  // handleSubmit = (e: SubmitEvent) => {
-  //   console.log("i'm submitted");
-  //   e.preventDefault();
-  //   const from = parseFloat(this.inputFrom.value);
-  //   const to = parseFloat(this.inputTo.value);
-  //   this.tween = new Tween(from, to);
-  //   this.tween
-  //     .subscribe((x: number) => {
-  //       this.x = x;
-  //       this.coords.textContent = `x === ${x}`;
-  //       this.box.style.transform = `translateX(${x}px)`;
-  //     })
-  //     .start();
-  // };
+  easeLinear(t: number, b: number, c: number, d: number) {
+    return (c * t) / d + b;
+  }
 
   handleClick = () => {
-    const from = parseFloat(this.inputFrom.value);
-    const to = parseFloat(this.inputTo.value);
-    console.log(`from: ${from}, to: ${to}`);
-    this.tween = new Tween(from, to);
-
-    this.tween = new Tween(
-      this.x,
-      100,
-      (t) => {
-        return t * t;
-      },
-      1000
+    this.from = parseFloat(
+      document.querySelector<HTMLInputElement>("#from")!.value
     );
-    this.tween.subscribe((x) => {
-      this.x = x;
-      this.coords.textContent = `x === ${x}`;
-      this.box.style.transform = `translateX(${x}px)`;
-    });
-    // .start();
+    this.to = parseFloat(
+      document.querySelector<HTMLInputElement>("#to")!.value
+    );
+    this.duration = parseFloat(
+      document.querySelector<HTMLInputElement>("#duration")!.value
+    );
+    this.startTime = Date.now();
+
+    this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
+  };
+
+  handleStop = () => {
+    window.cancelAnimationFrame(this.frameRequestHandle);
   };
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
     const currentTime = Date.now();
-    this.delta = (currentTime - this.startTime) * 0.001;
-    this.startTime = currentTime;
+    this.delta = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1)
+    this.x = this.easeLinear(
+      this.delta,
+      this.from,
+      this.to - this.from,
+      this.duration * 0.001
+    );
 
-    if (this.x >= 400) return;
-    this.x += 1;
-    this.coords.textContent = `x === ${this.x}`;
+    if (this.delta >= this.duration || this.x >= this.to) {
+      this.x = this.to;
+      // 이렇게 강제로 정해주는 것은 좋은 방법은 아닌 것 같다.
+      window.cancelAnimationFrame(this.frameRequestHandle);
+    }
     this.box.style.left = `${this.x}px`;
+    this.box.textContent = `x === ${parseFloat(this.x.toFixed(2))}`;
   };
 }
 window.addEventListener("load", () => {
