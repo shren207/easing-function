@@ -6,3 +6,19 @@
   color: #2c3e50;
   margin-top: 60px;
 }
+
+.box {
+  position: absolute;
+  left: 50px;
+  top: 250px;
+  transform: translateX(0px);
+}
+
+.box-inner {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background: #bdff34;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
