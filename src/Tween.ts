@@ -5,7 +5,7 @@ type Subscription = (x: number) => void;
 // 일단은 linear로 구현해보자.
 export class Tween {
   constructor(
-    from: number, // startValue of x
+    from: number, // startValue of xH
     to: number, // endValue of x
     easing: Easing = (t) => t, // easing function
     duration: number = 1000

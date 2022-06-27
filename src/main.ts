@@ -40,7 +40,7 @@ export default class App {
   from: number = 0;
   to: number = 0;
   x: number = 0;
-  duration: number = 1000;
+  duration: number = 1000; // ms
 
   isPaused: boolean = false;
 
@@ -98,7 +98,7 @@ export default class App {
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
-    const currentTime = Date.now();
+    const currentTime = Date.now(); // ms
     this.delta = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1)
     this.x = this.easeLinear(
       this.delta,
