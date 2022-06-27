@@ -29,16 +29,20 @@ export default class App {
   delta: number = 0;
   startTime: number = 0;
   frameRequestHandle: number = 0;
+
   box: HTMLDivElement = document.querySelector<HTMLDivElement>(".box-inner")!;
   start: HTMLButtonElement =
     document.querySelector<HTMLButtonElement>(".start")!;
   stop: HTMLButtonElement = document.querySelector<HTMLButtonElement>(".stop")!;
   reset: HTMLButtonElement =
     document.querySelector<HTMLButtonElement>(".reset")!;
+
   from: number = 0;
   to: number = 0;
   x: number = 0;
   duration: number = 1000;
+
+  isPaused: boolean = false;
 
   constructor() {
     App.instance = this; // Singleton Pattern
@@ -55,26 +59,33 @@ export default class App {
 
   handleStart = () => {
     // a.start();
-    this.from = parseFloat(
-      document.querySelector<HTMLInputElement>("#from")!.value
-    );
-    this.to = parseFloat(
-      document.querySelector<HTMLInputElement>("#to")!.value
-    );
-    this.duration = parseFloat(
-      document.querySelector<HTMLInputElement>("#duration")!.value
-    );
-    this.startTime = Date.now();
+    if (!this.isPaused) {
+      this.from = parseFloat(
+        document.querySelector<HTMLInputElement>("#from")!.value
+      );
+      this.to = parseFloat(
+        document.querySelector<HTMLInputElement>("#to")!.value
+      );
+      this.duration = parseFloat(
+        document.querySelector<HTMLInputElement>("#duration")!.value
+      );
+    } else {
+      this.isPaused = false;
+    }
 
+    this.startTime = Date.now();
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
   };
 
   handleStop = () => {
     // a.stop();
     window.cancelAnimationFrame(this.frameRequestHandle);
+    this.duration -= this.delta * 1000;
+    this.isPaused = true;
+    this.from = this.x;
     console.log(`delta: ${this.delta}`);
-    console.log(`start: ${this.startTime}`);
-    console.log(`end: ${Date.now()}`);
+    console.log(`duration: ${this.duration}`);
+    console.log(`from: ${this.from}`);
   };
 
   handleReset = () => {
