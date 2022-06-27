@@ -58,6 +58,7 @@ export default class App {
     return (c * t) / d + b;
   }
 
+  // handleStart, handleStop, handleReset은 Tween.ts에 별도 분리
   handleStart = () => {
     // a.start();
     if (!this.isPaused) {
@@ -77,7 +78,6 @@ export default class App {
     this.startTime = Date.now();
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
   };
-
   handleStop = () => {
     // a.stop();
     window.cancelAnimationFrame(this.frameRequestHandle);
@@ -88,7 +88,6 @@ export default class App {
     console.log(`duration: ${this.duration}`);
     console.log(`from: ${this.from}`);
   };
-
   handleReset = () => {
     // a.reset();
     window.cancelAnimationFrame(this.frameRequestHandle);
@@ -96,8 +95,6 @@ export default class App {
     this.box.style.left = `${this.x}px`;
     this.box.textContent = `x === ${this.x}`;
   };
-
-  // handleStart, handleStop, handleReset은 Tween.ts에 별도 분리
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
