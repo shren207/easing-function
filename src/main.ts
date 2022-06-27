@@ -1,4 +1,5 @@
 import "./style.css";
+// import { Tween } from "./Tween";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -18,17 +19,24 @@ export default class App {
   delta: number = 0;
   startTime: number;
   frameRequestHandle: number;
+  box: HTMLDivElement;
+  coords: HTMLDivElement;
+  start: HTMLButtonElement;
+  x: number;
+  // tween: Tween;
   constructor() {
     App.instance = this; // Singleton Pattern
     this.startTime = Date.now();
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
+    this.box = document.querySelector<HTMLDivElement>(".box")!;
+    this.coords = document.querySelector<HTMLDivElement>(".coords")!;
+    this.x = 50;
+    this.coords.textContent = "x === 50";
+    this.start = document.querySelector<HTMLButtonElement>(".start")!;
+  }
+  moveX(x: number) {
     const box = document.querySelector<HTMLDivElement>(".box.inner")!;
-    const coords = document.querySelector<HTMLDivElement>(".coords")!;
-    const button = document.querySelector<HTMLButtonElement>("button")!;
-    // button.addEventListener("click", () => {
-
-    // }
-    // coords.textContent = "x === 0";
+    box.style.left = `${x}px`;
   }
 
   frameRequest = () => {
@@ -37,7 +45,10 @@ export default class App {
     this.delta = (currentTime - this.startTime) * 0.001;
     this.startTime = currentTime;
 
-    // this.box.style.translateX =
+    if (this.x >= 400) return;
+    this.x += 1;
+    this.coords.textContent = `x === ${this.x}`;
+    this.box.style.left = `${this.x}px`;
   };
 }
 window.addEventListener("load", () => {
