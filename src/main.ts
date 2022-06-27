@@ -26,7 +26,7 @@ app.innerHTML = `
 export default class App {
   static instance: App;
 
-  delta: number = 0;
+  delta: number = 0; // 변수명 고민해보기
   startTime: number = 0;
   frameRequestHandle: number = 0;
 
@@ -53,6 +53,7 @@ export default class App {
     this.reset.addEventListener("click", this.handleReset);
   }
 
+  // Easing.ts로 별도 분리하기
   easeLinear(t: number, b: number, c: number, d: number) {
     return (c * t) / d + b;
   }
@@ -95,6 +96,8 @@ export default class App {
     this.box.style.left = `${this.x}px`;
     this.box.textContent = `x === ${this.x}`;
   };
+
+  // handleStart, handleStop, handleReset은 Tween.ts에 별도 분리
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
