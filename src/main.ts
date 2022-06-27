@@ -14,13 +14,13 @@ app.innerHTML = `
     <br />
     <label for="duration">duration : </label>
     <input type="text" id="duration" />
-</form>
+  </form>
   <button class="start">Start</button>
   <button class="stop">Stop</button>
   <button class="reset">Reset</button>
   <div class="box">
     <div class="box-inner"></div>
-</div>
+  </div>
 `;
 
 export default class App {
@@ -42,7 +42,7 @@ export default class App {
     App.instance = this; // Singleton Pattern
 
     this.box.textContent = `x === ${this.x}`;
-    this.start.addEventListener("click", this.handleClick);
+    this.start.addEventListener("click", this.handleStart);
     this.stop.addEventListener("click", this.handleStop);
   }
 
@@ -50,7 +50,7 @@ export default class App {
     return (c * t) / d + b;
   }
 
-  handleClick = () => {
+  handleStart = () => {
     this.from = parseFloat(
       document.querySelector<HTMLInputElement>("#from")!.value
     );
@@ -67,6 +67,9 @@ export default class App {
 
   handleStop = () => {
     window.cancelAnimationFrame(this.frameRequestHandle);
+    console.log(`delta: ${this.delta}`);
+    console.log(`start: ${this.startTime}`);
+    console.log(`end: ${Date.now()}`);
   };
 
   frameRequest = () => {
