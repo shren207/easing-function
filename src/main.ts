@@ -33,6 +33,8 @@ export default class App {
   start: HTMLButtonElement =
     document.querySelector<HTMLButtonElement>(".start")!;
   stop: HTMLButtonElement = document.querySelector<HTMLButtonElement>(".stop")!;
+  reset: HTMLButtonElement =
+    document.querySelector<HTMLButtonElement>(".reset")!;
   from: number = 0;
   to: number = 0;
   x: number = 0;
@@ -44,6 +46,7 @@ export default class App {
     this.box.textContent = `x === ${this.x}`;
     this.start.addEventListener("click", this.handleStart);
     this.stop.addEventListener("click", this.handleStop);
+    this.reset.addEventListener("click", this.handleReset);
   }
 
   easeLinear(t: number, b: number, c: number, d: number) {
@@ -51,6 +54,7 @@ export default class App {
   }
 
   handleStart = () => {
+    // a.start();
     this.from = parseFloat(
       document.querySelector<HTMLInputElement>("#from")!.value
     );
@@ -66,10 +70,19 @@ export default class App {
   };
 
   handleStop = () => {
+    // a.stop();
     window.cancelAnimationFrame(this.frameRequestHandle);
     console.log(`delta: ${this.delta}`);
     console.log(`start: ${this.startTime}`);
     console.log(`end: ${Date.now()}`);
+  };
+
+  handleReset = () => {
+    // a.reset();
+    window.cancelAnimationFrame(this.frameRequestHandle);
+    this.x = 0;
+    this.box.style.left = `${this.x}px`;
+    this.box.textContent = `x === ${this.x}`;
   };
 
   frameRequest = () => {
