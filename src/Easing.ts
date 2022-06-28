@@ -1,4 +1,4 @@
-export const easings = {
+export const easing = {
   easeLinear(t: number, b: number, c: number, d: number) {
     return (c * t) / d + b;
   },

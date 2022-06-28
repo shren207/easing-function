@@ -1,7 +1,7 @@
 import "./style.css";
 // import { Tween } from "./Tween";
-import { easings } from "./Easing";
-Object.keys(easings).forEach((key) => {
+import { easing } from "./Easing";
+Object.keys(easing).forEach((key) => {
   console.log(typeof key);
 });
 
@@ -36,6 +36,7 @@ export default class App {
   delta: number = 0; // 변수명 고민해보기
   startTime: number = 0;
   frameRequestHandle: number = 0;
+  easing: (t: number, b: number, c: number, d: number) => number;
 
   box: HTMLDivElement = document.querySelector<HTMLDivElement>(".box-inner")!;
   select: HTMLSelectElement =
@@ -60,9 +61,11 @@ export default class App {
     this.start.addEventListener("click", this.handleStart);
     this.stop.addEventListener("click", this.handleStop);
     this.reset.addEventListener("click", this.handleReset);
-    this.select.innerHTML = Object.keys(easings)
+    this.select.innerHTML = Object.keys(easing)
       .map((key) => `<option>${key}</option>`)
       .join("");
+    this.select.addEventListener("change", this.handleChange);
+    this.easing = this.easeLinear;
   }
 
   // Easing.ts로 별도 분리하기
@@ -107,22 +110,27 @@ export default class App {
     this.box.style.left = `${this.x}px`;
     this.box.textContent = `x === ${this.x}`;
   };
+  handleChange = (e) => {
+    console.log(easing[e.target.value]);
+    this.easing = easing[e.target.value];
+  };
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
     const currentTime = Date.now(); // ms
     this.delta = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1)
-    this.x = this.easeLinear(
+    this.x = this.easing(
       this.delta,
       this.from,
       this.to - this.from,
       this.duration * 0.001
     );
-
+    console.log(`x: ${this.x}`);
+    console.log(`delta: ${this.delta}`);
     if (this.delta >= this.duration || this.x >= this.to) {
-      this.x = this.to;
       // 이렇게 강제로 정해주는 것은 좋은 방법은 아닌 것 같다.
       window.cancelAnimationFrame(this.frameRequestHandle);
+      this.x = this.to;
     }
     this.box.style.left = `${this.x}px`;
     this.box.textContent = `x === ${parseFloat(this.x.toFixed(2))}`;
