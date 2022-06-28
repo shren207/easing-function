@@ -1,49 +1,49 @@
 export const easings = {
-  easeLinear(t: number, b: number, c: number, d: number): number {
+  easeLinear(t: number, b: number, c: number, d: number) {
     return (c * t) / d + b;
   },
-  easeInQuad(t: number, b: number, c: number, d: number): number {
+  easeInQuad(t: number, b: number, c: number, d: number) {
     return c * (t /= d) * t + b;
   },
-  easeOutQuad(t: number, b: number, c: number, d: number): number {
+  easeOutQuad(t: number, b: number, c: number, d: number) {
     return -c * (t /= d) * (t - 2) + b;
   },
-  easeInOutQuad(t: number, b: number, c: number, d: number): number {
+  easeInOutQuad(t: number, b: number, c: number, d: number) {
     if ((t /= d / 2) < 1) return (c / 2) * t * t + b;
     return (-c / 2) * (--t * (t - 2) - 1) + b;
   },
-  easeInSine(t: number, b: number, c: number, d: number): number {
+  easeInSine(t: number, b: number, c: number, d: number) {
     return -c * Math.cos((t / d) * (Math.PI / 2)) + c + b;
   },
-  easeOutSine(t: number, b: number, c: number, d: number): number {
+  easeOutSine(t: number, b: number, c: number, d: number) {
     return c * Math.sin((t / d) * (Math.PI / 2)) + b;
   },
-  easeInOutSine(t: number, b: number, c: number, d: number): number {
+  easeInOutSine(t: number, b: number, c: number, d: number) {
     return (-c / 2) * (Math.cos((Math.PI * t) / d) - 1) + b;
   },
-  easeInExpo(t: number, b: number, c: number, d: number): number {
+  easeInExpo(t: number, b: number, c: number, d: number) {
     return t === 0 ? b : c * Math.pow(2, 10 * (t / d - 1)) + b;
   },
-  easeOutExpo(t: number, b: number, c: number, d: number): number {
+  easeOutExpo(t: number, b: number, c: number, d: number) {
     return t === d ? b + c : c * (-Math.pow(2, (-10 * t) / d) + 1) + b;
   },
-  easeInOutExpo(t: number, b: number, c: number, d: number): number {
+  easeInOutExpo(t: number, b: number, c: number, d: number) {
     if (t === 0) return b;
     if (t === d) return b + c;
     if ((t /= d / 2) < 1) return (c / 2) * Math.pow(2, 10 * (t - 1)) + b;
     return (c / 2) * (-Math.pow(2, -10 * --t) + 2) + b;
   },
-  easeInCirc(t: number, b: number, c: number, d: number): number {
+  easeInCirc(t: number, b: number, c: number, d: number) {
     return -c * (Math.sqrt(1 - (t /= d) * t) - 1) + b;
   },
-  easeOutCirc(t: number, b: number, c: number, d: number): number {
+  easeOutCirc(t: number, b: number, c: number, d: number) {
     return c * Math.sqrt(1 - (t = t / d - 1) * t) + b;
   },
-  easeInOutCirc(t: number, b: number, c: number, d: number): number {
+  easeInOutCirc(t: number, b: number, c: number, d: number) {
     if ((t /= d / 2) < 1) return (-c / 2) * (Math.sqrt(1 - t * t) - 1) + b;
     return (c / 2) * (Math.sqrt(1 - (t -= 2) * t) + 1) + b;
   },
-  easeInElastic(t: number, b: number, c: number, d: number): number {
+  easeInElastic(t: number, b: number, c: number, d: number) {
     let s = 1.70158;
     let p = 0;
     let a = c;
@@ -64,7 +64,7 @@ export const easings = {
       ) + b
     );
   },
-  easeOutElastic(t: number, b: number, c: number, d: number): number {
+  easeOutElastic(t: number, b: number, c: number, d: number) {
     let s = 1.70158;
     let p = 0;
     let a = c;
@@ -83,7 +83,7 @@ export const easings = {
       b
     );
   },
-  easeInOutElastic(t: number, b: number, c: number, d: number): number {
+  easeInOutElastic(t: number, b: number, c: number, d: number) {
     let s = 1.70158;
     let p = 0;
     let a = c;

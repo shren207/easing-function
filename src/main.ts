@@ -1,5 +1,9 @@
 import "./style.css";
 // import { Tween } from "./Tween";
+import { easings } from "./Easing";
+Object.keys(easings).forEach((key) => {
+  console.log(typeof key);
+});
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -14,6 +18,9 @@ app.innerHTML = `
     <br />
     <label for="duration">duration : </label>
     <input type="text" id="duration" />
+    <br />
+    <label for="easing">easing : </label>
+    <select id="easing"></select>
   </form>
   <button class="start">Start</button>
   <button class="stop">Stop</button>
@@ -31,6 +38,8 @@ export default class App {
   frameRequestHandle: number = 0;
 
   box: HTMLDivElement = document.querySelector<HTMLDivElement>(".box-inner")!;
+  select: HTMLSelectElement =
+    document.querySelector<HTMLSelectElement>("#easing")!;
   start: HTMLButtonElement =
     document.querySelector<HTMLButtonElement>(".start")!;
   stop: HTMLButtonElement = document.querySelector<HTMLButtonElement>(".stop")!;
@@ -51,6 +60,9 @@ export default class App {
     this.start.addEventListener("click", this.handleStart);
     this.stop.addEventListener("click", this.handleStop);
     this.reset.addEventListener("click", this.handleReset);
+    this.select.innerHTML = Object.keys(easings)
+      .map((key) => `<option>${key}</option>`)
+      .join("");
   }
 
   // Easing.ts로 별도 분리하기

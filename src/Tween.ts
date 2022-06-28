@@ -29,3 +29,16 @@ export class Tween {
 // a.subscribe((x: number) => {});
 //
 // a.subscribe((x: number) => {});
+
+//   return (
+// <nav className={"mb-16"}>
+//   <label htmlFor={property} className={"text-2xl"}>
+//     Choose a {property} value :{" "}
+// </label>
+// <select id={property} onChange={updateValue}>
+//   {subProps.map((subProp, index) => (
+//       <option key={index}>{subProp}</option>
+//     ))}
+//   </select>
+//   </nav>
+// );
