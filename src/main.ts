@@ -11,13 +11,13 @@ app.innerHTML = `
   <h1>Easing Function</h1>
   <form>
     <label for="from">from : </label>
-    <input type="text" id="from" />
+    <input type="text" id="from" value="0"/>
     <br />
     <label for="to">to : </label>
-    <input type="text" id="to" />
+    <input type="text" id="to" value="400"/>
     <br />
     <label for="duration">duration : </label>
-    <input type="text" id="duration" />
+    <input type="text" id="duration" value="1000"/>
     <br />
     <label for="easing">easing : </label>
     <select id="easing"></select>
@@ -127,9 +127,11 @@ export default class App {
     );
     console.log(`x: ${this.x}`);
     console.log(`delta: ${this.delta}`);
-    if (this.delta >= this.duration || this.x >= this.to) {
+    console.log(`duration: ${this.duration}`);
+    if (this.delta * 1000 >= this.duration) {
       // 이렇게 강제로 정해주는 것은 좋은 방법은 아닌 것 같다.
       window.cancelAnimationFrame(this.frameRequestHandle);
+      this.frameRequestHandle = 0;
       this.x = this.to;
     }
     this.box.style.left = `${this.x}px`;

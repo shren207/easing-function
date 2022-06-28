@@ -1,4 +1,5 @@
 export const easing = {
+  // not 'easings'
   easeLinear(t: number, b: number, c: number, d: number): number {
     return (c * t) / d + b;
   },
