@@ -1,9 +1,6 @@
 import "./style.css";
-// import { Tween } from "./Tween";
+import { Tween } from "./Tween";
 import { easing } from "./Easing";
-Object.keys(easing).forEach((key) => {
-  console.log(typeof key);
-});
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -51,12 +48,12 @@ export default class App {
   to: number = 0;
   x: number = 0;
   duration: number = 1000; // ms
+  tween: Tween;
 
   isPaused: boolean = false;
 
   constructor() {
     App.instance = this; // Singleton Pattern
-
     this.box.textContent = `x === ${this.x}`;
     this.start.addEventListener("click", this.handleStart);
     this.stop.addEventListener("click", this.handleStop);
@@ -65,17 +62,13 @@ export default class App {
       .map((key) => `<option>${key}</option>`)
       .join("");
     this.select.addEventListener("change", this.handleChange);
-    this.easing = this.easeLinear;
+    this.easing = (t: number, b: number, c: number, d: number) =>
+      (c * t) / d + b;
+    this.tween = new Tween(this.box, 0, 400, this.easing, 1000);
   }
 
-  // Easing.ts로 별도 분리하기
-  easeLinear(t: number, b: number, c: number, d: number) {
-    return (c * t) / d + b;
-  }
-
-  // handleStart, handleStop, handleReset은 Tween.ts에 별도 분리
   handleStart = () => {
-    // a.start();
+    // this.tween.start();
     if (!this.isPaused) {
       this.from = parseFloat(
         document.querySelector<HTMLInputElement>("#from")!.value
@@ -86,37 +79,40 @@ export default class App {
       this.duration = parseFloat(
         document.querySelector<HTMLInputElement>("#duration")!.value
       );
+      this.tween = new Tween(
+        this.box,
+        this.from,
+        this.to,
+        this.easing,
+        this.duration
+      );
     } else {
       this.isPaused = false;
     }
-
     this.startTime = Date.now();
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
   };
   handleStop = () => {
-    // a.stop();
+    // this.tween.stop();
     window.cancelAnimationFrame(this.frameRequestHandle);
     this.duration -= this.delta * 1000;
     this.isPaused = true;
     this.from = this.x;
-    console.log(`delta: ${this.delta}`);
-    console.log(`duration: ${this.duration}`);
-    console.log(`from: ${this.from}`);
   };
   handleReset = () => {
-    // a.reset();
+    // this.tween.reset()
     window.cancelAnimationFrame(this.frameRequestHandle);
     this.x = 0;
     this.box.style.left = `${this.x}px`;
     this.box.textContent = `x === ${this.x}`;
   };
   handleChange = (e) => {
-    console.log(easing[e.target.value]);
     this.easing = easing[e.target.value];
   };
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
+    // this.tween.start();
     const currentTime = Date.now(); // ms
     this.delta = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1)
     this.x = this.easing(
@@ -125,13 +121,9 @@ export default class App {
       this.to - this.from,
       this.duration * 0.001
     );
-    console.log(`x: ${this.x}`);
-    console.log(`delta: ${this.delta}`);
-    console.log(`duration: ${this.duration}`);
     if (this.delta * 1000 >= this.duration) {
       // 이렇게 강제로 정해주는 것은 좋은 방법은 아닌 것 같다.
       window.cancelAnimationFrame(this.frameRequestHandle);
-      this.frameRequestHandle = 0;
       this.x = this.to;
     }
     this.box.style.left = `${this.x}px`;
