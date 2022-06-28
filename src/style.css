@@ -13,12 +13,7 @@ body {
 
 .box {
   position: absolute;
-  left: 50px;
   top: 250px;
-}
-
-.box-inner {
-    position: relative;
     width: 130px;
     height: 130px;
     background: #bdff34;

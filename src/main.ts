@@ -1,6 +1,6 @@
 import "./style.css";
 import { Tween } from "./Tween";
-import { easing } from "./Easing";
+import { easing } from "./easing";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -22,20 +22,17 @@ app.innerHTML = `
   <button class="start">Start</button>
   <button class="stop">Stop</button>
   <button class="reset">Reset</button>
-  <div class="box">
-    <div class="box-inner"></div>
-  </div>
+  <div class="box"></div>
 `;
 
 export default class App {
   static instance: App;
 
-  delta: number = 0; // 변수명 고민해보기
-  startTime: number = 0;
+  // animation
   frameRequestHandle: number = 0;
-  easing: (t: number, b: number, c: number, d: number) => number;
 
-  box: HTMLDivElement = document.querySelector<HTMLDivElement>(".box-inner")!;
+  // DOM
+  box: HTMLDivElement = document.querySelector<HTMLDivElement>(".box")!;
   select: HTMLSelectElement =
     document.querySelector<HTMLSelectElement>("#easing")!;
   start: HTMLButtonElement =
@@ -44,17 +41,13 @@ export default class App {
   reset: HTMLButtonElement =
     document.querySelector<HTMLButtonElement>(".reset")!;
 
-  from: number = 0;
-  to: number = 0;
-  x: number = 0;
-  duration: number = 1000; // ms
   tween: Tween;
-
-  isPaused: boolean = false;
+  easing: (t: number, b: number, c: number, d: number) => number;
 
   constructor() {
     App.instance = this; // Singleton Pattern
-    this.box.textContent = `x === ${this.x}`;
+
+    this.box.textContent = `x === ${0}`;
     this.start.addEventListener("click", this.handleStart);
     this.stop.addEventListener("click", this.handleStop);
     this.reset.addEventListener("click", this.handleReset);
@@ -69,24 +62,18 @@ export default class App {
 
   handleStart = () => {
     if (!this.tween.isPaused) {
-      this.from = parseFloat(
+      const from = parseFloat(
         document.querySelector<HTMLInputElement>("#from")!.value
       );
-      this.to = parseFloat(
+      const to = parseFloat(
         document.querySelector<HTMLInputElement>("#to")!.value
       );
-      this.duration = parseFloat(
+      const duration = parseFloat(
         document.querySelector<HTMLInputElement>("#duration")!.value
       );
-      this.tween = new Tween(
-        this.box,
-        this.from,
-        this.to,
-        this.easing,
-        this.duration
-      );
+      this.tween = new Tween(this.box, from, to, this.easing, duration);
     } else {
-      this.isPaused = false;
+      this.tween.isPaused = false;
     }
     this.tween.startTime = Date.now();
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
@@ -100,13 +87,14 @@ export default class App {
     this.tween.reset();
   };
   handleChange = (e) => {
+    // feedback : type error 해결
     this.easing = easing[e.target.value];
   };
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
     this.tween.start();
-    if (this.tween.delta * 1000 >= this.tween.duration) {
+    if (this.tween.remainingTime * 1000 >= this.tween.duration) {
       window.cancelAnimationFrame(this.frameRequestHandle);
     }
   };

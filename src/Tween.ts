@@ -9,7 +9,7 @@ export class Tween {
     (c * t) / d + b;
   duration: number = 1000;
   startTime: number = 0;
-  delta: number = 0;
+  remainingTime: number = 0;
   isPaused: boolean = false;
   x: number = 0;
 
@@ -19,9 +19,9 @@ export class Tween {
     to: number, // endValue of x
     easing: Easing = (t: number, b: number, c: number, d: number) =>
       (c * t) / d + b,
-    duration: number = 1000,
-    startTime: number = 0,
-    delta: number = 0
+    duration: number = 1000, // ms
+    remainingTime: number = 0, // s
+    startTime: number = 0 // ms
   ) {
     this.div = div;
     this.from = from;
@@ -29,26 +29,26 @@ export class Tween {
     this.easing = easing;
     this.duration = duration;
     this.startTime = startTime;
-    this.delta = delta;
+    this.remainingTime = remainingTime;
   }
 
   start(): void {
     const currentTime = Date.now(); // ms
-    this.delta = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1
+    this.remainingTime = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1
     this.x = this.easing(
-      this.delta,
+      this.remainingTime,
       this.from,
       this.to - this.from,
       this.duration * 0.001
     );
-    if (this.delta * 1000 >= this.duration) {
+    if (this.remainingTime * 1000 >= this.duration) {
       this.x = this.to;
     }
     this.div.style.left = `${this.x}px`;
     this.div.textContent = `x === ${parseFloat(this.x.toFixed(2))}`;
   }
   stop(): void {
-    this.duration -= this.delta * 1000;
+    this.duration -= this.remainingTime * 1000;
     this.isPaused = true;
     this.from = this.x;
   }
@@ -58,6 +58,7 @@ export class Tween {
     this.div.style.left = `${this.x}px`;
     this.div.textContent = `x === ${this.x}`;
   }
+  // feedback : subscribe의 용도, 쓰임
   // subscribe(subscription: Subscription): void {}
   // unsubscribe(subscription: Subscription): void {}
 }
