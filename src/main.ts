@@ -68,8 +68,7 @@ export default class App {
   }
 
   handleStart = () => {
-    // this.tween.start();
-    if (!this.isPaused) {
+    if (!this.tween.isPaused) {
       this.from = parseFloat(
         document.querySelector<HTMLInputElement>("#from")!.value
       );
@@ -89,22 +88,16 @@ export default class App {
     } else {
       this.isPaused = false;
     }
-    this.startTime = Date.now();
+    this.tween.startTime = Date.now();
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
   };
   handleStop = () => {
-    // this.tween.stop();
     window.cancelAnimationFrame(this.frameRequestHandle);
-    this.duration -= this.delta * 1000;
-    this.isPaused = true;
-    this.from = this.x;
+    this.tween.stop();
   };
   handleReset = () => {
-    // this.tween.reset()
     window.cancelAnimationFrame(this.frameRequestHandle);
-    this.x = 0;
-    this.box.style.left = `${this.x}px`;
-    this.box.textContent = `x === ${this.x}`;
+    this.tween.reset();
   };
   handleChange = (e) => {
     this.easing = easing[e.target.value];
@@ -112,22 +105,10 @@ export default class App {
 
   frameRequest = () => {
     this.frameRequestHandle = window.requestAnimationFrame(this.frameRequest);
-    // this.tween.start();
-    const currentTime = Date.now(); // ms
-    this.delta = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1)
-    this.x = this.easing(
-      this.delta,
-      this.from,
-      this.to - this.from,
-      this.duration * 0.001
-    );
-    if (this.delta * 1000 >= this.duration) {
-      // 이렇게 강제로 정해주는 것은 좋은 방법은 아닌 것 같다.
+    this.tween.start();
+    if (this.tween.delta * 1000 >= this.tween.duration) {
       window.cancelAnimationFrame(this.frameRequestHandle);
-      this.x = this.to;
     }
-    this.box.style.left = `${this.x}px`;
-    this.box.textContent = `x === ${parseFloat(this.x.toFixed(2))}`;
   };
 }
 window.addEventListener("load", () => {

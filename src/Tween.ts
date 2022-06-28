@@ -1,5 +1,5 @@
 type Easing = (t: number, b: number, c: number, d: number) => number;
-type Subscription = (x: number) => void;
+// type Subscription = (x: number) => void;
 
 export class Tween {
   div: HTMLDivElement;
@@ -10,6 +10,8 @@ export class Tween {
   duration: number = 1000;
   startTime: number = 0;
   delta: number = 0;
+  isPaused: boolean = false;
+  x: number = 0;
 
   constructor(
     div: HTMLDivElement,
@@ -33,31 +35,29 @@ export class Tween {
   start(): void {
     const currentTime = Date.now(); // ms
     this.delta = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1
-    const x: number = this.easing(
+    this.x = this.easing(
       this.delta,
       this.from,
       this.to - this.from,
       this.duration * 0.001
     );
-    this.div.style.left = `${x}px`;
-    this.div.textContent = `x === ${parseFloat(this.x.toFixed(2))}`;
     if (this.delta * 1000 >= this.duration) {
-      // 이렇게 강제로 정해주는 것은 좋은 방법은 아닌 것 같다.
       this.x = this.to;
     }
+    this.div.style.left = `${this.x}px`;
+    this.div.textContent = `x === ${parseFloat(this.x.toFixed(2))}`;
   }
-  stop(): void {}
-  reset(): void {}
-  update(): void {}
-  subscribe(subscription: Subscription): void {}
-  unsubscribe(subscription: Subscription): void {}
+  stop(): void {
+    this.duration -= this.delta * 1000;
+    this.isPaused = true;
+    this.from = this.x;
+  }
+  reset(): void {
+    this.x = 0;
+    this.from = 0;
+    this.div.style.left = `${this.x}px`;
+    this.div.textContent = `x === ${this.x}`;
+  }
+  // subscribe(subscription: Subscription): void {}
+  // unsubscribe(subscription: Subscription): void {}
 }
-
-// [reference]
-// const a = new Tween(0, 1, 1000);
-//
-// a.start();
-// a.stop();
-// a.reset();
-//
-// a.subscribe((x: number) => {});
