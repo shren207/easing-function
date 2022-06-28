@@ -2,7 +2,7 @@ type Easing = (t: number, b: number, c: number, d: number) => number;
 // type Subscription = (x: number) => void;
 
 export class Tween {
-  div: HTMLDivElement;
+  div: HTMLDivElement; // * 이렇게 div를 받아오는 것이 아님 (subscirption을 사용해서 범용적으로 구현해야 함)
   from: number;
   to: number;
   easing: Easing = (t: number, b: number, c: number, d: number) =>
@@ -10,7 +10,7 @@ export class Tween {
   duration: number = 1000;
   startTime: number = 0;
   remainingTime: number = 0;
-  isPaused: boolean = false;
+  isPaused: boolean = false; // * isPaused도 사실은 필요없다고 하심
   x: number = 0;
 
   constructor(
@@ -59,6 +59,7 @@ export class Tween {
     this.div.textContent = `x === ${this.x}`;
   }
   // feedback : subscribe의 용도, 쓰임
+  // * subscription을 사용해야 Tween.ts를 범용적으로 사용할 수 있다. 그게 바로 함수형 프로그래밍이다.
   // subscribe(subscription: Subscription): void {}
   // unsubscribe(subscription: Subscription): void {}
 }

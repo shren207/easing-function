@@ -51,10 +51,10 @@ export default class App {
     this.start.addEventListener("click", this.handleStart);
     this.stop.addEventListener("click", this.handleStop);
     this.reset.addEventListener("click", this.handleReset);
+    this.select.addEventListener("change", this.handleChange);
     this.select.innerHTML = Object.keys(easing)
       .map((key) => `<option>${key}</option>`)
       .join("");
-    this.select.addEventListener("change", this.handleChange);
     this.easing = (t: number, b: number, c: number, d: number) =>
       (c * t) / d + b;
     this.tween = new Tween(this.box, 0, 400, this.easing, 1000);
