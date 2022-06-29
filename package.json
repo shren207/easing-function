@@ -8,7 +8,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/d3-ease": "^3.0.0",
     "typescript": "^4.5.4",
     "vite": "^2.9.9"
+  },
+  "dependencies": {
+    "d3-ease": "^3.0.1"
   }
 }
