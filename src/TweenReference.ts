@@ -3,6 +3,7 @@ import { easeSinInOut } from "d3-ease";
 type Subscription = (value: number) => void;
 
 class Tween {
+  // Dean님은 Tween class를 export하지 않으셨음
   private startTime: number = 0;
   private subscriptions: Array<Subscription> = [];
   private onEnterFrameId?: number;
@@ -19,11 +20,13 @@ class Tween {
   }
 
   public play() {
+    // * start()
     this.startTime = Date.now();
     this.onEnterFrameId = window.requestAnimationFrame(this.onEnterFrame);
   }
 
   public pause() {
+    // * stop()
     if (this.onEnterFrameId) {
       window.cancelAnimationFrame(this.onEnterFrameId);
       this.onEnterFrameId = undefined;
@@ -31,6 +34,7 @@ class Tween {
   }
 
   public reset() {
+    // * progress가 currentTime을 의미하는 것 같은데, 내가 작성한 것보다 좀더 정교하게 구현되어 있
     this.progress = 0;
   }
 

@@ -1,5 +1,4 @@
 type Easing = (t: number, b: number, c: number, d: number) => number;
-// type Subscription = (x: number) => void;
 
 export class Tween {
   div: HTMLDivElement; // * 이렇게 div를 받아오는 것이 아님 (subscirption을 사용해서 범용적으로 구현해야 함)
@@ -12,9 +11,10 @@ export class Tween {
   remainingTime: number = 0;
   isPaused: boolean = false; // * isPaused도 사실은 필요없다고 하심
   x: number = 0;
+  // * default는 public이지만, 직접 명시를 하는 것이 더 좋은것 같다.
 
   constructor(
-    div: HTMLDivElement,
+    div: HTMLDivElement, // * 이런 식으로 사용하면 범용적으로 Tween.ts를 사용할 수 없음
     from: number, // startValue of x
     to: number, // endValue of x
     easing: Easing = (t: number, b: number, c: number, d: number) =>
@@ -33,6 +33,7 @@ export class Tween {
   }
 
   start(): void {
+    // * Dean님은 play()로 구현하신 듯
     const currentTime = Date.now(); // ms
     this.remainingTime = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1
     this.x = this.easing(
