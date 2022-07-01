@@ -11,6 +11,7 @@ export class Tween {
   remainingTime: number = 0;
   isPaused: boolean = false; // * isPaused도 사실은 필요없다고 하심
   x: number = 0;
+
   // * default는 public이지만, 직접 명시를 하는 것이 더 좋은것 같다.
 
   constructor(
@@ -33,7 +34,7 @@ export class Tween {
   }
 
   start(): void {
-    // * Dean님은 play()로 구현하신 듯
+    // * 모범 코드에서는 play()
     const currentTime = Date.now(); // ms
     this.remainingTime = (currentTime - this.startTime) * 0.001; // ms -> s (0 ~ 1
     this.x = this.easing(
@@ -48,19 +49,23 @@ export class Tween {
     this.div.style.left = `${this.x}px`;
     this.div.textContent = `x === ${parseFloat(this.x.toFixed(2))}`;
   }
+
   stop(): void {
+    // * 모범 코드에서는 pause()
     this.duration -= this.remainingTime * 1000;
     this.isPaused = true;
     this.from = this.x;
   }
+
   reset(): void {
     this.x = 0;
     this.from = 0;
     this.div.style.left = `${this.x}px`;
     this.div.textContent = `x === ${this.x}`;
   }
+
   // feedback : subscribe의 용도, 쓰임
-  // * subscription을 사용해야 Tween.ts를 범용적으로 사용할 수 있다. 그게 바로 함수형 프로그래밍이다.
+  // "subscription을 사용해야 Tween.ts를 범용적으로 사용할 수 있다. 그게 바로 함수형 프로그래밍이다"
   // subscribe(subscription: Subscription): void {}
   // unsubscribe(subscription: Subscription): void {}
 }
